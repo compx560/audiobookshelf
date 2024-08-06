@@ -35,7 +35,7 @@ module.exports.checkFilepathIsAudioFile = checkFilepathIsAudioFile
 
 /**
  * TODO: Function needs to be re-done
- * @param {string} mediaType 
+ * @param {string} mediaType
  * @param {string[]} paths array of relative file paths
  * @returns {Record<string,string[]>} map of files grouped into potential libarary item dirs
  */
@@ -126,9 +126,9 @@ function groupFilesIntoLibraryItemPaths(mediaType, paths) {
 module.exports.groupFilesIntoLibraryItemPaths = groupFilesIntoLibraryItemPaths
 
 /**
- * @param {string} mediaType 
+ * @param {string} mediaType
  * @param {{name:string, path:string, dirpath:string, reldirpath:string, fullpath:string, extension:string, deep:number}[]} fileItems (see recurseFiles)
- * @param {boolean} [audiobooksOnly=false] 
+ * @param {boolean} [audiobooksOnly=false]
  * @returns {Record<string,string[]>} map of files grouped into potential libarary item dirs
  */
 function groupFileItemsIntoLibraryItemDirs(mediaType, fileItems, audiobooksOnly = false) {
@@ -209,8 +209,8 @@ module.exports.groupFileItemsIntoLibraryItemDirs = groupFileItemsIntoLibraryItem
 
 /**
  * Get LibraryFile from filepath
- * @param {string} libraryItemPath 
- * @param {string[]} files 
+ * @param {string} libraryItemPath
+ * @param {string[]} files
  * @returns {import('../objects/files/LibraryFile')}
  */
 function buildLibraryFile(libraryItemPath, files) {
@@ -225,17 +225,17 @@ module.exports.buildLibraryFile = buildLibraryFile
 
 /**
  * Get details parsed from filenames
- * 
- * @param {string} relPath 
- * @param {boolean} parseSubtitle 
+ *
+ * @param {string} relPath
+ * @param {boolean} parseSubtitle
  * @returns {LibraryItemFilenameMetadata}
  */
 function getBookDataFromDir(relPath, parseSubtitle = false) {
   const splitDir = relPath.split('/')
 
   var folder = splitDir.pop() // Audio files will always be in the directory named for the title
-  series = (splitDir.length > 1) ? splitDir.pop() : null // If there are at least 2 more directories, next furthest will be the series
-  author = (splitDir.length > 0) ? splitDir.pop() : null // There could be many more directories, but only the top 3 are used for naming /author/series/title/
+  author = splitDir.length > 1 ? splitDir.shift() : null // There could be many more directories, but the top directory should be the author
+  series = splitDir.length > 0 ? splitDir : null // Pass all remaining directory names as an array.  These folders between Author and Book are series.
 
   // The  may contain various other pieces of metadata, these functions extract it.
   var [folder, asin] = getASIN(folder)
@@ -260,8 +260,8 @@ module.exports.getBookDataFromDir = getBookDataFromDir
 
 /**
  * Extract narrator from folder name
- * 
- * @param {string} folder 
+ *
+ * @param {string} folder
  * @returns {[string, string]} [folder, narrator]
  */
 function getNarrator(folder) {
@@ -272,7 +272,7 @@ function getNarrator(folder) {
 
 /**
  * Extract series sequence from folder name
- * 
+ *
  * @example
  * 'Book 2 - Title - Subtitle'
  * 'Title - Subtitle - Vol 12'
@@ -283,8 +283,8 @@ function getNarrator(folder) {
  * '100 - Book Title'
  * '6. Title'
  * '0.5 - Book Title'
- * 
- * @param {string} folder 
+ *
+ * @param {string} folder
  * @returns {[string, string]} [folder, sequence]
  */
 function getSequence(folder) {
@@ -310,8 +310,8 @@ function getSequence(folder) {
 
 /**
  * Extract published year from folder name
- * 
- * @param {string} folder 
+ *
+ * @param {string} folder
  * @returns {[string, string]} [folder, publishedYear]
  */
 function getPublishedYear(folder) {
@@ -329,8 +329,8 @@ function getPublishedYear(folder) {
 
 /**
  * Extract subtitle from folder name
- * 
- * @param {string} folder 
+ *
+ * @param {string} folder
  * @returns {[string, string]} [folder, subtitle]
  */
 function getSubtitle(folder) {
@@ -341,8 +341,8 @@ function getSubtitle(folder) {
 
 /**
  * Extract asin from folder name
- * 
- * @param {string} folder 
+ *
+ * @param {string} folder
  * @returns {[string, string]} [folder, asin]
  */
 function getASIN(folder) {
@@ -358,8 +358,8 @@ function getASIN(folder) {
 }
 
 /**
- * 
- * @param {string} relPath 
+ *
+ * @param {string} relPath
  * @returns {LibraryItemFilenameMetadata}
  */
 function getPodcastDataFromDir(relPath) {
@@ -373,10 +373,10 @@ function getPodcastDataFromDir(relPath) {
 }
 
 /**
- * 
- * @param {string} libraryMediaType 
- * @param {string} folderPath 
- * @param {string} relPath 
+ *
+ * @param {string} libraryMediaType
+ * @param {string} folderPath
+ * @param {string} relPath
  * @returns {{ mediaMetadata: LibraryItemFilenameMetadata, relPath: string, path: string}}
  */
 function getDataFromMediaDir(libraryMediaType, folderPath, relPath) {
